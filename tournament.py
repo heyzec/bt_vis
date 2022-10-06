@@ -1,16 +1,15 @@
 from bt_ai.game import PlayerAI
+from bt_vis.constants import PIPE_FILE_BOARD_UPDATES, PIPE_FILE_SEND_USER_ACTION
 import utils
 
 from pypipe.pipe import Pipe
 
-pipe = Pipe('/tmp/board', 'o')
-pipe_action1 = Pipe('/tmp/action1', 'o')
-pipe_action2 = Pipe('/tmp/action2', 'o')
+pipe_send_user_action = Pipe(PIPE_FILE_SEND_USER_ACTION, 'o')
+pipe_board_updates = Pipe(PIPE_FILE_BOARD_UPDATES, 'o')
 
 class PlayerManual:
     def make_move(self, board):
-        pipe_action1.write(board)
-        data = pipe_action2.read_sync()
+        data = pipe_send_user_action.read_sync()
         if len(data) != 2:
             print("OH NO")
             return
@@ -59,7 +58,7 @@ class Tournament:
             colour = "someone"
             print(f'Move No: {move} by {colour}')
             utils.print_state(self.board) # printing the current configuration of the board after making move
-            pipe_action1.write(self.board)
+            pipe_board_updates.write(self.board)
             self.move += 1
             
         
@@ -67,5 +66,6 @@ def main():
     tournament = Tournament(PlayerManual(), PlayerAI())
     tournament.play()
     
-main()
+if __name__ == '__main__':
+    main()
         

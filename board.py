@@ -4,10 +4,12 @@ from py_scm.handler import Handler
 from py_scm.node import Node
 
 BLOCK_SIZE = 50
-from bt_vis.constants import BLACK, BOARD_REFRESH, BOARD_UPDATED, WHITE
+from bt_vis.constants import BLACK, BOARD_REFRESH, PIPE_FILE_SEND_USER_ACTION, WHITE
 
 
 class Board(Node):
+    pipe = Pipe(PIPE_FILE_SEND_USER_ACTION, 'o')
+
     def __init__(self):
         super().__init__()
         self.selected = None
@@ -22,8 +24,7 @@ class Board(Node):
             return
 
         if self.selected is not None:
-            pipe_action2 = Pipe('/tmp/action2', 'o')
-            pipe_action2.write([self.selected, new_selection])
+            self.pipe.write([self.selected, new_selection])
             self.selected = None
             return
 
