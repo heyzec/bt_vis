@@ -49,7 +49,23 @@ class Board:
 
     
     def game_over(self) -> bool:
-        return 'W' in self.board[0] or 'B' in self.board[5]
+        # Reached end line
+        if 'W' in self.board[0] or 'B' in self.board[5]:
+            return True
+        n_black, n_white = 0, 0
+        # Potential slowdown
+        for i in range(6):
+            for j in range(6):
+                piece = self.board[i][j]
+                if piece == 'B':
+                    n_black += 1
+                elif piece == 'W':
+                    n_white += 1
+        if n_black == 0 or n_white == 0:
+            return True
+        return False
+                
+
         
     
     def __repr__(self):
