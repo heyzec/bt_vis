@@ -1,19 +1,12 @@
-from bt_ai.game import PlayerAI
-from bt_vis.constants import PIPE_FILE_BOARD_UPDATES, PIPE_FILE_SEND_USER_ACTION
+import random
+from bt_ai.player_ai import PlayerAI
+from bt_vis.player import PlayerManual
 import utils
 
+from bt_vis.constants import PIPE_FILE_BOARD_UPDATES
 from pypipe.pipe import Pipe
 
-pipe_send_user_action = Pipe(PIPE_FILE_SEND_USER_ACTION, 'o')
 pipe_board_updates = Pipe(PIPE_FILE_BOARD_UPDATES, 'o')
-
-class PlayerManual:
-    def make_move(self, board):
-        data = pipe_send_user_action.read_sync()
-        if len(data) != 2:
-            print("OH NO")
-            return
-        return data
 
 
 class Tournament:

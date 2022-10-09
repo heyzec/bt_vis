@@ -1,9 +1,5 @@
-import pygame
-import asyncio
-from pypipe.pipe import Pipe
 from py_scm.director import Director
 from bt_vis.game_scene import GameScene
-
 
 
 

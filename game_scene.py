@@ -11,7 +11,6 @@ from py_scm.handler import Handler
 from py_scm.row import Row
 
 from py_scm.scene import Scene
-import utils
 
 BLOCK_SIZE = 50
 BLACK = pygame.Color('#000000')
