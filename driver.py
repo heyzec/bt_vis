@@ -47,7 +47,7 @@ class Driver:
             self.head_node.add_child(new_node)
             self.head_node = new_node
 
-            await asyncio.sleep(0.5)
+            await asyncio.sleep(0.01)
             
 
             
