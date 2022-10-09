@@ -28,7 +28,10 @@ class Board(Node):
             return
 
         if self.selected is not None:
-            self.pipe.write([self.selected, new_selection])
+            action = [self.selected, new_selection]
+            # So that visualiser controls white not black
+            action = utils.invert_action(action)
+            self.pipe.write(action)
             self.selected = None
             return
 
