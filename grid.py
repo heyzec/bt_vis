@@ -11,7 +11,7 @@ from bt_vis.constants import BLACK, BOARD_REFRESH, PIPE_FILE_SEND_USER_ACTION, W
 from bt_vis import utils
 
 
-class Board(Node):
+class Grid(Node):
     pipe = Pipe(PIPE_FILE_SEND_USER_ACTION, 'o')
 
     def __init__(self):
@@ -22,7 +22,7 @@ class Board(Node):
         self.attach(Handler(self.on_board_update, BOARD_REFRESH))
 
     def on_click(self, event, context):
-        new_selection = Board.click_to_coord(event, self.x, self.y)
+        new_selection = Grid.click_to_coord(event, self.x, self.y)
         if new_selection == self.selected:
             self.selected = None
             return

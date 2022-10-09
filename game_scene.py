@@ -4,7 +4,7 @@ import pygame
 
 import pyperclip
 import pygame
-from bt_vis.board import Board
+from bt_vis.grid import Grid
 from py_scm.button import Button
 from py_scm.col import Col
 from py_scm.handler import Handler
@@ -63,7 +63,7 @@ class GameScene(Scene):
     
     def on_setup(self):
         self.driver.start_helper()
-        board = Board()
+        board = Grid()
         self.board = board
         
         btn_back = Button("Back")
