@@ -1,6 +1,7 @@
 import random
 from bt_ai.player_ai import PlayerAI
-from bt_vis.player import PlayerManual
+from bt_vis.board import Board
+from bt_vis.player import Player, PlayerManual
 import utils
 
 from bt_vis.constants import PIPE_FILE_BOARD_UPDATES
@@ -10,53 +11,49 @@ pipe_board_updates = Pipe(PIPE_FILE_BOARD_UPDATES, 'o')
 
 
 class Tournament:
-    def __init__(self, player1, player2):
+    def __init__(self, player1: Player, player2: Player, initial_board=None, show_board=False):
+        if initial_board is None:
+            initial_board = Board.generate_init_board()
+
         self.move = 0
-        self.board = Tournament.generate_init_board()
+        self.board: Board = initial_board
         self.player1 = player1
         self.player2 = player2
+        self.show_board = show_board
         
-    def game_over(self):
-        return ('B' in self.board[5] or 'W' in self.board[0])
-
-
     def is_black_turn(self):
         return self.move % 2 == 0
-
-    @staticmethod
-    def generate_init_board():
-        board = [
-            ['B'] * 6, ['B'] * 6, # 2 black rows
-            ['_'] * 6, ['_'] * 6, # 2 empty rows
-            ['W'] * 6, ['W'] * 6, # 2 white rows
-        ]
-        return board
     
 
     def play(self):
-        while not self.game_over():
+        while not self.board.game_over():
             if self.is_black_turn():
                 player = self.player1
             else:
                 player = self.player2
             
             if not self.is_black_turn():
-                utils.invert_board(self.board)
-            move = player.make_move(self.board)
+                self.board = self.board.invert()
+            move = player.make_move(self.board.board)
             src, dst = move
-            utils.state_change(self.board, src, dst) # makes the move effective on the board
+            # makes the move effective on the board
+            self.board = self.board.move(src, dst)
             if not self.is_black_turn():
-                utils.invert_board(self.board)
+                self.board = self.board.invert()
 
             colour = "someone"
-            print(f'Move No: {move} by {colour}')
-            utils.print_state(self.board) # printing the current configuration of the board after making move
-            pipe_board_updates.write(self.board)
+            print(f'Move No: {move} by {type(player).__name__}')
+            if self.show_board:
+                # printing the current configuration of the board after making move
+                utils.print_state(self.board)
+            pipe_board_updates.write(self.board.board)
             self.move += 1
             
         
 def main():
-    tournament = Tournament(PlayerManual(), PlayerAI())
+    # tournament = Tournament(PlayerManual(), PlayerAI())
+    tournament = Tournament(PlayerAI(), PlayerManual())
+    tournament = Tournament(PlayerAI(), PlayerAI())
     tournament.play()
     
 if __name__ == '__main__':
