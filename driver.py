@@ -1,6 +1,9 @@
 """Deals with board moves, validity, restarts, players"""
+from __future__ import annotations
 import asyncio
 import subprocess
+from typing import Optional
+from py_scm.director import Director
 
 import utils
 from pypipe.pipe import Pipe
@@ -9,12 +12,12 @@ from bt_vis.constants import PIPE_FILE_BOARD_UPDATES
 pipe_board_updates = Pipe(PIPE_FILE_BOARD_UPDATES, 'o')
 
 class GameNode:
-    def __init__(self, board):
-        self.parent = None
-        self.children = []
+    def __init__(self, board: list[list[str]]):
+        self.parent: Optional[GameNode] = None
+        self.children: list[GameNode] = []
         self.board = board
-    
-    def add_child(self, node):
+
+    def add_child(self, node: GameNode):
         self.children.append(node)
         node.parent = self
 
@@ -26,6 +29,7 @@ class Driver:
         self.root_node = GameNode(utils.generate_init_state())
         self.head_node = self.root_node
         self.child_proc = None
+        self.director = None
 
 
     def start_helper(self):
@@ -43,15 +47,13 @@ class Driver:
             if board == self.head_node.board:
                 continue
             self.board = board
-            new_node = GameNode(board)
+            new_node = GameNode(board)  # type: ignore
             self.head_node.add_child(new_node)
             self.head_node = new_node
 
             await asyncio.sleep(0.01)
-            
 
-            
-    def set_director(self, director):
+    def set_director(self, director: Director):
         self.director = director
 
     def undo(self):

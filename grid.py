@@ -1,4 +1,5 @@
 import os
+from typing import Optional
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 import pygame
 
@@ -17,7 +18,7 @@ class Grid(Node):
     def __init__(self):
         super().__init__()
         self.selected = None
-        self.board = None
+        self.board: Optional[list[list[str]]] = None
         self.attach(Handler(self.on_click, pygame.MOUSEBUTTONDOWN))
         self.attach(Handler(self.on_board_update, BOARD_REFRESH))
 
@@ -60,6 +61,7 @@ class Grid(Node):
         return 6 * BLOCK_SIZE
         
     def draw_board(self, surface):
+        assert self.board is not None
         x_offset, y_offset = self.x, self.y
         for i in range(6):
             for j in range(6):

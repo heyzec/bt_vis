@@ -4,6 +4,7 @@ import pygame
 
 import pyperclip
 import pygame
+from bt_vis.driver import Driver
 from bt_vis.grid import Grid
 from py_scm.button import Button
 from py_scm.col import Col
@@ -24,7 +25,7 @@ class GameScene(Scene):
         super().__init__()
         self.driver = None
     
-    def set_driver(self, driver):
+    def set_driver(self, driver: Driver):
         self.driver = driver
 
     @property
@@ -36,6 +37,7 @@ class GameScene(Scene):
         return 598
     
     def get_board(self):
+        assert self.driver is not None
         return self.driver.head_node.board
 
     def on_draw(self, screen):
@@ -47,14 +49,17 @@ class GameScene(Scene):
         self.handle(pygame.event.Event(BOARD_REFRESH, board=board), None)
         
     def on_back(self, event, context):
+        assert self.driver is not None
         self.driver.undo()
         self.refresh_board(self.get_board())
 
     def on_next(self, event, context):
+        assert self.driver is not None
         self.driver.redo()
         self.refresh_board(self.get_board())
         
     def on_restart(self, event, context):
+        assert self.driver is not None
         self.driver.start_helper()
         
     def on_copy(self, event, context):
@@ -62,6 +67,7 @@ class GameScene(Scene):
 
     
     def on_setup(self):
+        assert self.driver is not None
         self.driver.start_helper()
         board = Grid()
         self.board = board
