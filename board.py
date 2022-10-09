@@ -1,6 +1,5 @@
 from __future__ import annotations
 import copy
-from typing import Optional
 
 class Board:
     """Captures the objective state of board"""
@@ -32,13 +31,13 @@ class Board:
         # Not implemented yet
         return True
     
-    def move(self, src, dst) -> Optional[Board]:
-        """Attempts to move/capture a piece at location. Returns None if move is illegal."""
+    def move(self, src, dst) -> Board:
+        """Attempts to move/capture a piece at location."""
         i, j = src
         if self.board[i][j] == '_':
-            return None
+            raise Exception("Cannot move nonpiece")
         if not self.is_legal_move(src, dst):
-            return None
+            raise Exception("Move illegal")
         
         new_i, new_j = dst
         new_board = copy.deepcopy(self.board)
