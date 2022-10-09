@@ -1,10 +1,14 @@
+import os
+os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 import pygame
+
 from pypipe.pipe import Pipe
 from py_scm.handler import Handler
 from py_scm.node import Node
 
 BLOCK_SIZE = 50
 from bt_vis.constants import BLACK, BOARD_REFRESH, PIPE_FILE_SEND_USER_ACTION, WHITE
+from bt_vis import utils
 
 
 class Board(Node):

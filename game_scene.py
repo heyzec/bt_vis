@@ -1,4 +1,7 @@
-import subprocess
+import os
+os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
+import pygame
+
 import pyperclip
 import pygame
 from bt_vis.board import Board
