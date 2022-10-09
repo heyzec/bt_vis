@@ -25,10 +25,11 @@ class Driver:
         self.selected = None
         self.root_node = GameNode(utils.generate_init_state())
         self.head_node = self.root_node
+        self.child_proc = None
 
 
     def start_helper(self):
-        child_proc = subprocess.Popen(["python","helper.py"])
+        self.child_proc = subprocess.Popen(["python","helper.py"])
 
     async def listener(self):
         while True:
@@ -65,3 +66,7 @@ class Driver:
 
     async def run(self):
         await self.listener()
+
+    def kill_child_proc(self):
+        if self.child_proc is not None:
+            self.child_proc.terminate()

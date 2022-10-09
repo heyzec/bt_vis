@@ -15,6 +15,5 @@ def main():
     except Exception:
         traceback.print_exc()
     finally:
-        pass
         # Kill child processes
-        # child_proc.terminate()
+        driver.kill_child_proc()
