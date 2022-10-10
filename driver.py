@@ -12,17 +12,20 @@ from bt_vis.constants import PIPE_FILE_BOARD_UPDATES
 pipe_board_updates = Pipe(PIPE_FILE_BOARD_UPDATES, 'o')
 
 class GameNode:
+    """Stores the raw state of the board and its history."""
     def __init__(self, board: list[list[str]]):
         self.parent: Optional[GameNode] = None
         self.children: list[GameNode] = []
         self.board = board
 
     def add_child(self, node: GameNode):
+        """Create a new node that branches off the current node."""
         self.children.append(node)
         node.parent = self
 
 
 class Driver:
+    """A game engine."""
     def __init__(self):
         self.board = None
         self.selected = None
@@ -67,8 +70,10 @@ class Driver:
         self.head_node = self.head_node.children[0]
 
     async def run(self):
+        """Starts the game engine."""
         await self.listener()
 
     def kill_child_proc(self):
+        """Terminates the child process."""
         if self.child_proc is not None:
             self.child_proc.terminate()

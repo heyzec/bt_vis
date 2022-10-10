@@ -10,6 +10,7 @@ pipe_board_updates = Pipe(PIPE_FILE_BOARD_UPDATES, 'o')
 
 
 class Tournament:
+    """Represents a 2-player game of the Breakthrough board game."""
     def __init__(self, black: Player, white: Player, initial_board: Optional[Board] = None,
             show_board=False):
         if initial_board is None:
@@ -38,6 +39,7 @@ class Tournament:
 
 
     def play_once(self):
+        """Ask the player whose turn is next to make a move on the board."""
         assert not self.board.game_over()
         if self.is_black_turn():
             player = self.black
@@ -66,6 +68,7 @@ class Tournament:
         return move, val
 
     def play_until_game_over(self):
+        """Repeatedly ask players to make a move until the game is over."""
         while True:
             self.play_once()
             if self.winner is not None:

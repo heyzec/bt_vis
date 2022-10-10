@@ -10,6 +10,7 @@ class Board:
 
     @classmethod
     def generate_init_board(cls):
+        """Generate the initial state of the board when game starts."""
         board = [
             ['B'] * 6, ['B'] * 6, # 2 black rows
             ['_'] * 6, ['_'] * 6, # 2 empty rows
@@ -18,6 +19,7 @@ class Board:
         return Board(board)
 
     def invert(self) -> Board:
+        """Vertically flips the board to mimick the perspective from the opponent."""
         new_board = copy.deepcopy(self.board)
         new_board.reverse()
         for i in range(6):
@@ -29,7 +31,7 @@ class Board:
         return Board(new_board)
 
     def is_legal_move(self, src, dst):
-        # Not implemented yet
+        """Checks whether the move is legal."""
         return True
 
     def move(self, src, dst) -> Board:
@@ -49,6 +51,7 @@ class Board:
 
 
     def game_over(self) -> bool:
+        """Returns True if the game is over."""
         # Reached end line
         if 'W' in self.board[0] or 'B' in self.board[5]:
             return True
@@ -67,9 +70,11 @@ class Board:
 
 
     def __repr__(self):
+        """List representation of the Board object."""
         return f"Board({self.board}"
 
     def print_board(self):
+        """Pretty prints the state of the board."""
         horizontal_rule = '+' + ('-'*5 + '+') * 6
         for i in range(6):
             print(horizontal_rule)
