@@ -3,17 +3,15 @@ from typing import Optional
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 import pygame
 
-from pypipe.pipe import Pipe
 from py_scm.handler import Handler
 from py_scm.node import Node
 
 BLOCK_SIZE = 50
-from bt_vis.constants import BLACK, BOARD_REFRESH, PIPE_FILE_SEND_USER_ACTION, WHITE
+from bt_vis.constants import BLACK, BOARD_REFRESH, USER_SELECTED, WHITE
 from bt_vis import utils
 
 
 class Grid(Node):
-    pipe = Pipe(PIPE_FILE_SEND_USER_ACTION, 'o')
 
     def __init__(self):
         super().__init__()
@@ -32,9 +30,7 @@ class Grid(Node):
             action = [self.selected, new_selection]
             # So that visualiser controls white not black
             action = utils.invert_action(action)
-            self.pipe.write(action)
-            self.selected = None
-            return
+            self.get_root().handle(pygame.event.Event(USER_SELECTED, action=action), None)
 
         self.selected = new_selection
     

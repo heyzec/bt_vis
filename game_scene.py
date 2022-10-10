@@ -18,7 +18,7 @@ BLACK = pygame.Color('#000000')
 WHITE = pygame.Color('#FFFFFF')
 BEIGE = pygame.Color('#f0bc7a')
 
-from bt_vis.constants import BOARD_REFRESH, BOARD_UPDATED
+from bt_vis.constants import BOARD_REFRESH, USER_SELECTED
 
 class GameScene(Scene):
     def __init__(self):
@@ -46,7 +46,7 @@ class GameScene(Scene):
         super().on_draw(screen)
         
     def refresh_board(self, board):
-        self.handle(pygame.event.Event(BOARD_REFRESH, board=board), None)
+        self.handle(pygame.event.Event(BOARD_REFRESH, board=board, driver=self.driver), None)
         
     def on_back(self, event, context):
         assert self.driver is not None
@@ -64,11 +64,18 @@ class GameScene(Scene):
         
     def on_copy(self, event, context):
         pyperclip.copy(repr(self.get_board()))
+        
+    def on_user_input(self, event, context):
+        assert self.driver is not None
+        self.driver.send_action(event.action)
 
     
     def on_setup(self):
         assert self.driver is not None
         self.driver.start_helper()
+
+        self.attach(Handler(self.on_user_input, USER_SELECTED))
+
         board = Grid()
         self.board = board
         

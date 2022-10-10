@@ -2,17 +2,19 @@
 from __future__ import annotations
 import asyncio
 from multiprocessing import Process
-import subprocess
+
 from typing import Optional
 from bt_ai.player_ai import PlayerAI
+from bt_vis.player import PlayerManual
 from bt_vis.tournament import Tournament
 from py_scm.director import Director
 
 import utils
 from pypipe.pipe import Pipe
-from bt_vis.constants import PIPE_FILE_BOARD_UPDATES
+from bt_vis.constants import PIPE_FILE_BOARD_UPDATES, PIPE_FILE_SEND_USER_ACTION
 
 pipe_board_updates = Pipe(PIPE_FILE_BOARD_UPDATES, 'o')
+pipe_send_user_action = Pipe(PIPE_FILE_SEND_USER_ACTION, 'o')
 
 class GameNode:
     """Stores the raw state of the board and its history."""
@@ -63,6 +65,9 @@ class Driver:
             self.head_node = new_node
 
             await asyncio.sleep(0.01)
+    
+    def send_action(self, action):
+        pipe_send_user_action.write(action)
 
     def set_director(self, director: Director):
         self.director = director
