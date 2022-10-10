@@ -1,8 +1,11 @@
 """Deals with board moves, validity, restarts, players"""
 from __future__ import annotations
 import asyncio
+from multiprocessing import Process
 import subprocess
 from typing import Optional
+from bt_ai.player_ai import PlayerAI
+from bt_vis.tournament import Tournament
 from py_scm.director import Director
 
 import utils
@@ -36,7 +39,12 @@ class Driver:
 
 
     def start_helper(self):
-        self.child_proc = subprocess.Popen(["python","helper.py"])
+        def f():
+            tournament = Tournament(PlayerAI(), PlayerManual())
+            tournament.play_until_game_over()
+        p = Process(target=f)
+        p.start()
+        self.child_proc = p
 
     async def listener(self):
         while True:
