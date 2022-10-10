@@ -16,7 +16,7 @@ class Tournament:
             initial_board = Board.generate_init_board()
         assert isinstance(initial_board, Board)
 
-        self.move = 0
+        self.move_count = 0
         self.board = initial_board
         self.black = black
         self.white = white
@@ -26,7 +26,15 @@ class Tournament:
         self.winner = None
 
     def is_black_turn(self):
-        return self.move % 2 == 0
+        return self.move_count % 2 == 0
+
+    def format_player_name(self, player):
+        player_kind = type(player).__name__
+        if player is self.black:
+            return f"Black ({player_kind})"
+        if player is self.white:
+            return f"White ({player_kind})"
+        assert False
 
 
     def play_once(self):
@@ -45,16 +53,15 @@ class Tournament:
         if not self.is_black_turn():
             self.board = self.board.invert()
 
-        colour = "someone"
-        print(f'Move No: {move} by {type(player).__name__}')
+        print(f'Move {self.move_count}: {move} (Val: {val}) by {self.format_player_name(player)}')
         if self.show_board:
             # printing the current configuration of the board after making move
             self.board.print_board()
         pipe_board_updates.write(self.board.board)
-        self.move += 1
+        self.move_count += 1
 
         if self.board.game_over():
-            print("GAME OVER")
+            print(f"Game over!!! {self.format_player_name(player)} won.")
             self.winner = player
         return move, val
 
